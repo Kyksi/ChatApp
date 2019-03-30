@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Main Activity");
-/*
+
         profile_image = findViewById(R.id.profile_image);
         username = findViewById(R.id.username);
 
@@ -81,7 +81,5 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         return false;
-    }
-    */
     }
 }
