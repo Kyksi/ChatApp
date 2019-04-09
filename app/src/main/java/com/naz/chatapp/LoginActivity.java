@@ -13,6 +13,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,8 +50,8 @@ import java.security.NoSuchAlgorithmException;
 
 public class LoginActivity extends AppCompatActivity {
 
-    MaterialEditText email, password;
-    Button btn_login;
+    EditText email, password;
+    Button btn_login, sign_up;
     FirebaseAuth auth;
     SignInButton signInBtn;
     LoginButton facebookloginBtn;
@@ -64,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Login");
+        getSupportActionBar().setTitle("Sign in");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         auth = FirebaseAuth.getInstance();
@@ -75,7 +76,16 @@ public class LoginActivity extends AppCompatActivity {
         btn_login = findViewById(R.id.btn_login);
         signInBtn = findViewById(R.id.googleBtn);
         facebookloginBtn = findViewById(R.id.facebookBtn);
+        sign_up = findViewById(R.id.sign_up_here);
         facebookloginBtn.setReadPermissions("email");
+
+        sign_up.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+                finish();
+            }
+        });
 
         facebookloginBtn.setOnClickListener(new View.OnClickListener() {
             @Override

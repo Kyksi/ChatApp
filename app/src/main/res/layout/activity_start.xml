@@ -6,41 +6,66 @@
     android:gravity="center"
     android:orientation="vertical"
     android:layout_height="match_parent"
-    tools:context=".StartActivity"
-    android:background="@drawable/blue_wallpapers">
+    tools:context=".StartActivity">
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="451dp"
-        android:layout_height="116dp"
-        app:srcCompat="@drawable/ptichka_light_img"
-        android:layout_marginBottom="20dp"/>
-
+    <LinearLayout
+        android:layout_marginTop="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Welcome to "
+            android:textSize="22dp"
+            android:textStyle="bold"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textSize="22dp"
+            android:textStyle="bold"
+            android:textColor="#9E8BF3"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="."
+            android:textSize="25dp"
+            android:textStyle="bold"
+            android:textColor="#641FB3"/>
+    </LinearLayout>
     <TextView
+        android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        android:textColor="#fff"
-        android:textSize="25dp"
-        android:textStyle="bold"
-        />
+        android:text="have a fun"
+        android:textSize="20dp"
+        android:textStyle="normal"/>
 
-    <Button
-        android:layout_marginTop="100dp"
-        android:layout_width="match_parent"
+    <ImageView
+        android:layout_marginTop="40dp"
+        android:id="@+id/imageView3"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/login"
-        android:text="Login"
-        android:background="@color/colorPrimaryDarkBtn"
-        android:textColor="#fff"/>
+        app:srcCompat="@drawable/welcome_illustration" />
 
     <Button
         android:layout_marginTop="20dp"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/register"
-        android:text="Registration"
-        android:background="@color/colorPrimaryDarkBtn"
-        android:textColor="#fff"/>
+        android:text="sign up"
+        android:background="@drawable/welcome_sign_up"
+        android:textColor="#fff"
+        android:paddingBottom="20dp"
+        android:textSize="16dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/login"
+        android:text="sign in"
+        android:background="@drawable/welcome_sign_in"
+        android:paddingBottom="20dp"
+        android:textSize="16dp"/>
 
 </LinearLayout>

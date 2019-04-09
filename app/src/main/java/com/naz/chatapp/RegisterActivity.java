@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,8 +25,8 @@ import java.util.HashMap;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    MaterialEditText username, email, password;
-    Button btn_register;
+    EditText username, email, password, confirmPassword;
+    Button btn_register, sign_in;
 
     FirebaseAuth auth;
     DatabaseReference reference;
@@ -37,16 +38,25 @@ public class RegisterActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Registraion");
+        getSupportActionBar().setTitle("Sign up");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         username = findViewById(R.id.username);
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
+        confirmPassword = findViewById(R.id.confirmPassword);
         btn_register = findViewById(R.id.btn_register);
-
+        sign_in = findViewById(R.id.sign_in);
 
         auth = FirebaseAuth.getInstance();
+
+        sign_in.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                finish();
+            }
+        });
 
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,11 +64,18 @@ public class RegisterActivity extends AppCompatActivity {
                 String txt_username = username.getText().toString();
                 String txt_email = email.getText().toString();
                 String txt_password = password.getText().toString();
+                String txt_confirm_password = confirmPassword.getText().toString();
 
-                if(TextUtils.isEmpty(txt_username) || TextUtils.isEmpty(txt_email) || TextUtils.isEmpty(txt_password)){
-                    Toast.makeText(RegisterActivity.this, "All fields are required", Toast.LENGTH_SHORT).show();
+                if(TextUtils.isEmpty(txt_username) || TextUtils.isEmpty(txt_email)
+                        || TextUtils.isEmpty(txt_password) || TextUtils.isEmpty(txt_confirm_password)){
+                    Toast.makeText(RegisterActivity.this, "All fields are required",
+                            Toast.LENGTH_SHORT).show();
                 } else if(txt_password.length() < 6){
-                    Toast.makeText(RegisterActivity.this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Password must be at least 6 characters",
+                            Toast.LENGTH_SHORT).show();
+                } else if(!txt_confirm_password.equals(txt_password)){
+                    Toast.makeText(RegisterActivity.this, "Incorrect confirmation password",
+                            Toast.LENGTH_SHORT).show();
                 } else {
                     register(txt_username, txt_email, txt_password);
                 }

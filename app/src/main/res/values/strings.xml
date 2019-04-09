@@ -3,9 +3,10 @@
     <string name="email">email</string>
     <string name="username">username</string>
     <string name="create_a_new_account">Create a new account</string>
-    <string name="register">Register</string>
-    <string name="login">Login</string>
+    <string name="register">Sign up</string>
+    <string name="login">Sign in</string>
     <string name="password">password</string>
+    <string name="confirmPassword">confirm password</string>
 
     <string name="facebook_app_id">700833243645579</string>
     <string name="fb_login_protocol_scheme">fb700833243645579</string>
