@@ -6,20 +6,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.common.SignInButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class StartActivity extends AppCompatActivity {
 
+    Animation animAlpha;
     Button login, register;
-    SignInButton signInBtn;
     FirebaseUser firebaseUser;
-    GoogleSignInClient mGoogleSignInClient;
-    FirebaseAuth auth;
 
     protected void onStart(){
         super.onStart();
@@ -40,11 +38,13 @@ public class StartActivity extends AppCompatActivity {
 
         login = findViewById(R.id.login);
         register = findViewById(R.id.register);
+        animAlpha = AnimationUtils.loadAnimation(this, R.anim.alpha);
 
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                v.startAnimation(animAlpha);
                 startActivity(new Intent(StartActivity.this, LoginActivity.class));
             }
         });
@@ -52,6 +52,7 @@ public class StartActivity extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                v.startAnimation(animAlpha);
                 startActivity(new Intent(StartActivity.this, RegisterActivity.class));
             }
         });

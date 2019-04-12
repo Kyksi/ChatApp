@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -30,6 +32,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     FirebaseAuth auth;
     DatabaseReference reference;
+    View mRegisterForm, mProgress;
+    Animation animAlpha;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +51,10 @@ public class RegisterActivity extends AppCompatActivity {
         confirmPassword = findViewById(R.id.confirmPassword);
         btn_register = findViewById(R.id.btn_register);
         sign_in = findViewById(R.id.sign_in);
+        mRegisterForm = findViewById(R.id.register_form);
+        mProgress = findViewById(R.id.register_progress_form);
+
+        animAlpha = AnimationUtils.loadAnimation(this, R.anim.alpha);
 
         auth = FirebaseAuth.getInstance();
 
@@ -61,6 +69,8 @@ public class RegisterActivity extends AppCompatActivity {
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                v.startAnimation(animAlpha);
+
                 String txt_username = username.getText().toString();
                 String txt_email = email.getText().toString();
                 String txt_password = password.getText().toString();
@@ -85,6 +95,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void register(final String username, String email, String password){
+        showProgress(true);
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -105,6 +116,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if(task.isSuccessful()){
+                                        showProgress(false);
                                         Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                         startActivity(intent);
@@ -113,11 +125,23 @@ public class RegisterActivity extends AppCompatActivity {
                                 }
                             });
                         } else {
+                            showProgress(false);
                             Toast.makeText(RegisterActivity.this,
                                     "You can't register with this email or password", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+    }
+
+
+    private void showProgress(boolean show){
+        if (show){
+            mRegisterForm.setVisibility(View.INVISIBLE);
+            mProgress.setVisibility(View.VISIBLE);
+        } else {
+            mRegisterForm.setVisibility(View.VISIBLE);
+            mProgress.setVisibility(View.INVISIBLE);
+        }
     }
 
 }

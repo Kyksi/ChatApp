@@ -9,12 +9,35 @@
     <include android:id="@+id/toolbar" layout="@layout/bar_layuot" />
 
     <LinearLayout
+        android:id="@+id/register_progress_form"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="invisible">
+        <ProgressBar
+            android:id="@+id/register_progress"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:max="30"
+            android:layout_marginBottom="40dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Wait just a second ..."
+            android:textSize="18dp"
+            android:textColor="@color/colorPrimary"/>
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center_horizontal"
-        android:padding="15dp">
+        android:padding="15dp"
+        android:id="@+id/register_form">
 
         <TextView
             android:layout_width="wrap_content"
