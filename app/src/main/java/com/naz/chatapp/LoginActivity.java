@@ -182,14 +182,17 @@ public class LoginActivity extends AppCompatActivity {
             public void onSuccess(AuthResult authResult) {
                 showProgress(false);
                 FirebaseUser user = auth.getCurrentUser();
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                intent.putExtra("Name", authResult.getUser().getDisplayName());
+                intent.putExtra("Photo", authResult.getUser().getPhotoUrl().toString());
+                startActivity(intent);
                 finish();
                 Toast.makeText(LoginActivity.this, "Sign in successfully", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
+    private void firebaseAuthWithGoogle(final GoogleSignInAccount account) {
         showProgress(true);
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         auth.signInWithCredential(credential)
@@ -200,7 +203,10 @@ public class LoginActivity extends AppCompatActivity {
                             showProgress(false);
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = auth.getCurrentUser();
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            intent.putExtra("Name", account.getDisplayName());
+                            intent.putExtra("Photo", account.getPhotoUrl().toString());
+                            startActivity(intent);
                             finish();
                             Toast.makeText(LoginActivity.this, "Sign in successfully", Toast.LENGTH_SHORT).show();
 

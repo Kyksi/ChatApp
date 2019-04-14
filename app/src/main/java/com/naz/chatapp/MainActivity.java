@@ -10,8 +10,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -21,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.naz.chatapp.Model.User;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -52,21 +56,51 @@ public class MainActivity extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                assert user != null;
-                username.setText(user.getUsername());
-                if(user.getImageURL().equals("default")){
-                    // WSTAWLAEM FOTO AVATARKI !!
-                    // POZZHE NADO SMENIT'
-                    profile_image.setImageResource(R.drawable.ptichka_img);
-                } else {
-                    Glide.with(MainActivity.this).load(user.getImageURL()).into(profile_image);
+                try {
+                    displayHeader(dataSnapshot);
+                }
+                catch (Exception exeption){
+                    createNewUser();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
+            }
+        });
+    }
+
+    private void displayHeader(@NonNull DataSnapshot dataSnapshot){
+        User user = dataSnapshot.getValue(User.class);
+        assert user != null;
+        username.setText(user.getUsername());
+        if(user.getImageURL().equals("default")){
+            // WSTAWLAEM FOTO AVATARKI !!
+            // POZZHE NADO SMENIT'
+            profile_image.setImageResource(R.drawable.ptichka_img);
+        } else {
+            Glide.with(MainActivity.this).load(user.getImageURL()).into(profile_image);
+        }
+    }
+
+    private void createNewUser(){
+        String userID = firebaseUser.getUid();
+        Intent intent = getIntent();
+
+        reference = FirebaseDatabase.getInstance().getReference("Users").child(userID);
+        HashMap<String, String> hashMap = new HashMap<>();
+
+        hashMap.put("id", userID);
+        hashMap.put("username", intent.getStringExtra("Name"));
+        hashMap.put("imageURL", intent.getStringExtra("Photo"));
+
+        reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Toast.makeText(MainActivity.this, "Sign in successful", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

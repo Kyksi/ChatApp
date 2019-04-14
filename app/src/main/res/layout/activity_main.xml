@@ -38,12 +38,4 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TEXT"
-        android:textSize="18dp"
-        android:id="@+id/txt"
-        />
-
 </LinearLayout>
