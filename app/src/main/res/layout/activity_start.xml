@@ -29,9 +29,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="."
-            android:textSize="25dp"
+            android:textSize="36dp"
             android:textStyle="bold"
-            android:textColor="#641FB3"/>
+            android:textColor="#9E8BF3"/>
     </LinearLayout>
     <TextView
         android:layout_marginTop="10dp"
