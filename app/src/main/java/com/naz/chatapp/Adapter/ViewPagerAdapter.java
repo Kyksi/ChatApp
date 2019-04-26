@@ -1,4 +1,4 @@
-package com.naz.chatapp.Model;
+package com.naz.chatapp.Adapter;
 
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
