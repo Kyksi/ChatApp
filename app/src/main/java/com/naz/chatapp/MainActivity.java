@@ -4,7 +4,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,8 +30,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.naz.chatapp.Fragments.ChatsFragment;
+import com.naz.chatapp.Fragments.UsersFragment;
 import com.naz.chatapp.Model.User;
+import com.naz.chatapp.Model.ViewPagerAdapter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -38,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
 
     FirebaseUser firebaseUser;
     DatabaseReference reference;
+
+    ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -61,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     displayHeader(dataSnapshot);
                 }
-                catch (Exception exeption){
+                catch (Exception exception){
                     createNewUser();
                 }
             }
@@ -71,6 +83,15 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        ViewPager viewPager = findViewById(R.id.view_pager);
+
+        viewPagerAdapter.addFragment(new ChatsFragment(), "Chats");
+        viewPagerAdapter.addFragment(new UsersFragment(), "Users");
+
+        viewPager.setAdapter(viewPagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     private void displayHeader(@NonNull DataSnapshot dataSnapshot){
@@ -145,4 +166,5 @@ public class MainActivity extends AppCompatActivity {
 
         confirmDialog.create().show();
     }
+
 }

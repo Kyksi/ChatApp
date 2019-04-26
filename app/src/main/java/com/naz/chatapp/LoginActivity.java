@@ -1,23 +1,18 @@
 package com.naz.chatapp;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.Layout;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -41,8 +36,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -56,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
     View mLoginFormView, mProgress;
     Animation animAlpha;
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Sign in");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Sign in");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         auth = FirebaseAuth.getInstance();
@@ -178,13 +175,13 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(LoginActivity.this, ""+e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onSuccess(AuthResult authResult) {
                 showProgress(false);
-                FirebaseUser user = auth.getCurrentUser();
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 intent.putExtra("Name", authResult.getUser().getDisplayName());
-                intent.putExtra("Photo", authResult.getUser().getPhotoUrl().toString());
+                intent.putExtra("Photo", Objects.requireNonNull(authResult.getUser().getPhotoUrl()).toString());
                 startActivity(intent);
                 finish();
                 Toast.makeText(LoginActivity.this, "Sign in successfully", Toast.LENGTH_SHORT).show();
@@ -197,15 +194,15 @@ public class LoginActivity extends AppCompatActivity {
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         auth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             showProgress(false);
                             // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = auth.getCurrentUser();
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             intent.putExtra("Name", account.getDisplayName());
-                            intent.putExtra("Photo", account.getPhotoUrl().toString());
+                            intent.putExtra("Photo", Objects.requireNonNull(account.getPhotoUrl()).toString());
                             startActivity(intent);
                             finish();
                             Toast.makeText(LoginActivity.this, "Sign in successfully", Toast.LENGTH_SHORT).show();
@@ -230,6 +227,7 @@ public class LoginActivity extends AppCompatActivity {
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
+                assert account != null;
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
