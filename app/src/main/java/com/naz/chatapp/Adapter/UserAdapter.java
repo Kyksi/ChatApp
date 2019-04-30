@@ -1,6 +1,7 @@
 package com.naz.chatapp.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.naz.chatapp.MessageActivity;
 import com.naz.chatapp.Model.User;
 import com.naz.chatapp.R;
 
@@ -34,12 +36,21 @@ public class UserAdapter  extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        User user = userList.get(position);
+        final User user = userList.get(position);
         holder.username.setText(user.getUsername());
         if (user.getImageURL().equals("default"))
             holder.profileImage.setImageResource(R.drawable.ptichka);
         else
             Glide.with(context).load(user.getImageURL()).into(holder.profileImage);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, MessageActivity.class);
+                intent.putExtra("userid", user.getId());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
