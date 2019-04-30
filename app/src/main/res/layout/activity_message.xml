@@ -62,7 +62,8 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:background="@android:color/transparent"
-            android:hint="Type a message..."/>
+            android:hint="Type a message..."
+            android:paddingLeft="10dp"/>
         
         <ImageButton
             android:background="@drawable/ic_btn_send"
