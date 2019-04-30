@@ -42,6 +42,7 @@ public class MessageActivity extends AppCompatActivity {
 
     ImageButton btn_send;
     EditText txt_send;
+    CircleImageView img_on, img_off;
 
     FirebaseUser firebaseUser;
     DatabaseReference reference;
@@ -67,6 +68,7 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+                //startActivity(new Intent(MessageActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
             }
         });
 
@@ -80,6 +82,8 @@ public class MessageActivity extends AppCompatActivity {
         username = findViewById(R.id.username);
         btn_send = findViewById(R.id.btn_send);
         txt_send = findViewById(R.id.text_send);
+        img_on = findViewById(R.id.img_on);
+        img_off = findViewById(R.id.img_off);
 
         intent = getIntent();
         final String userid = intent.getStringExtra("userid");
@@ -108,6 +112,20 @@ public class MessageActivity extends AppCompatActivity {
                     profile_image.setImageResource(R.drawable.ptichka_img);
                 } else {
                     Glide.with(MessageActivity.this).load(user.getImageURL()).into(profile_image);
+                }
+
+                switch (user.getStatus()){
+                    case "online":
+                        img_on.setVisibility(View.VISIBLE);
+                        img_off.setVisibility(View.GONE);
+                        break;
+                    case "offline":
+                        img_off.setVisibility(View.VISIBLE);
+                        img_on.setVisibility(View.GONE);
+                        break;
+                        default:
+                            img_off.setVisibility(View.GONE);
+                            img_on.setVisibility(View.GONE);
                 }
 
                 readMesseges(firebaseUser.getUid(), userid, user.getImageURL());
@@ -155,6 +173,26 @@ public class MessageActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void status(String status){
+        reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("status", status);
+
+        reference.updateChildren(hashMap);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        status("online");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        status("offline");
     }
 
 }

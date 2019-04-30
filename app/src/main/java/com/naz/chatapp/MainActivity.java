@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
         hashMap.put("id", userID);
         hashMap.put("username", intent.getStringExtra("Name"));
         hashMap.put("imageURL", intent.getStringExtra("Photo"));
+        hashMap.put("status", "offline");
 
         reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -134,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.logout:
                 exitDialog();
-                break;
+                return true;
         }
         return false;
     }
@@ -147,8 +148,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(MainActivity.this, StartActivity.class));
                 finish();
+                //startActivity(new Intent(MainActivity.this, StartActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
             }
         });
 
@@ -162,4 +163,23 @@ public class MainActivity extends AppCompatActivity {
         confirmDialog.create().show();
     }
 
+    private void status(String status){
+        reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("status", status);
+
+        reference.updateChildren(hashMap);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        status("online");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        status("offline");
+    }
 }
