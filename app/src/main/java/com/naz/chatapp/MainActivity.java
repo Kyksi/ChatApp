@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,7 +26,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.naz.chatapp.Fragments.ChatsFragment;
+import com.naz.chatapp.Fragments.UsersFragment;
 import com.naz.chatapp.Model.User;
+import com.naz.chatapp.Adapter.ViewPagerAdapter;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -38,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
 
     FirebaseUser firebaseUser;
     DatabaseReference reference;
+
+    ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -61,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     displayHeader(dataSnapshot);
                 }
-                catch (Exception exeption){
+                catch (Exception exception){
                     createNewUser();
                 }
             }
@@ -71,6 +78,15 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        ViewPager viewPager = findViewById(R.id.view_pager);
+
+        viewPagerAdapter.addFragment(new ChatsFragment(), "Chats");
+        viewPagerAdapter.addFragment(new UsersFragment(), "Users");
+
+        viewPager.setAdapter(viewPagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     private void displayHeader(@NonNull DataSnapshot dataSnapshot){
@@ -96,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
         hashMap.put("id", userID);
         hashMap.put("username", intent.getStringExtra("Name"));
         hashMap.put("imageURL", intent.getStringExtra("Photo"));
+        hashMap.put("status", "offline");
 
         reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -118,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.logout:
                 exitDialog();
-                break;
+                return true;
         }
         return false;
     }
@@ -131,8 +148,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(MainActivity.this, StartActivity.class));
                 finish();
+                //startActivity(new Intent(MainActivity.this, StartActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
             }
         });
 
@@ -144,5 +161,25 @@ public class MainActivity extends AppCompatActivity {
         });
 
         confirmDialog.create().show();
+    }
+
+    private void status(String status){
+        reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("status", status);
+
+        reference.updateChildren(hashMap);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        status("online");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        status("offline");
     }
 }
