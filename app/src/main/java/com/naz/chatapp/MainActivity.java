@@ -103,25 +103,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createNewUser(){
-        String userID = firebaseUser.getUid();
-        Intent intent = getIntent();
+        try {
+            String userID = firebaseUser.getUid();
+            Intent intent = getIntent();
 
-        reference = FirebaseDatabase.getInstance().getReference("Users").child(userID);
-        HashMap<String, String> hashMap = new HashMap<>();
+            reference = FirebaseDatabase.getInstance().getReference("Users").child(userID);
+            HashMap<String, String> hashMap = new HashMap<>();
 
-        hashMap.put("id", userID);
-        hashMap.put("username", intent.getStringExtra("Name"));
-        hashMap.put("imageURL", intent.getStringExtra("Photo"));
-        hashMap.put("status", "offline");
+            hashMap.put("id", userID);
+            hashMap.put("username", intent.getStringExtra("Name"));
+            hashMap.put("imageURL", intent.getStringExtra("Photo"));
+            hashMap.put("status", "offline");
 
-        reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    Toast.makeText(MainActivity.this, "Sign in successful", Toast.LENGTH_SHORT).show();
+            reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(MainActivity.this, "Sign in successful", Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        });
+            });
+        } catch (Exception ex){
+            Toast.makeText(MainActivity.this, "Something goes wrong...", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -148,8 +152,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 FirebaseAuth.getInstance().signOut();
-                finish();
-                //startActivity(new Intent(MainActivity.this, StartActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                //finish();
+                startActivity(new Intent(MainActivity.this, StartActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
             }
         });
 
