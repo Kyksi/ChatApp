@@ -68,8 +68,8 @@ public class MessageActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
-                //startActivity(new Intent(MessageActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                //finish();
+                startActivity(new Intent(MessageActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
             }
         });
 
@@ -167,7 +167,9 @@ public class MessageActivity extends AppCompatActivity {
         });
 
         final DatabaseReference chatRef1 = FirebaseDatabase.getInstance().getReference("Chatlist")
-                .child(receiver).child(firebaseUser.getUid());
+                .child(receiver)
+                .child(firebaseUser.getUid());
+
         chatRef1.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
