@@ -21,6 +21,7 @@ public class StartActivity extends AppCompatActivity {
 
     protected void onStart(){
         super.onStart();
+        //FirebaseAuth.getInstance().signOut();
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
