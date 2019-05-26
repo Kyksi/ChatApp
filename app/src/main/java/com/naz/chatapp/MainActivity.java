@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
             // POZZHE NADO SMENIT'
             profile_image.setImageResource(R.drawable.ptichka_img);
         } else {
-            Glide.with(MainActivity.this).load(user.getImageURL()).into(profile_image);
+            Glide.with(getApplicationContext()).load(user.getImageURL()).into(profile_image);
         }
     }
 
