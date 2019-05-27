@@ -86,6 +86,17 @@
                 android:paddingBottom="20dp"
                 android:layout_centerHorizontal="true"/>
 
+            <TextView
+                android:id="@+id/forgot_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Forgot your password?"
+                android:layout_below="@id/btn_login"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                android:textSize="16dp"/>
+
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="wrap_content"

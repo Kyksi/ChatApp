@@ -13,6 +13,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -51,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
     CallbackManager callbackManager;
     View mLoginFormView, mProgress;
     Animation animAlpha;
+    TextView forgot_password;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -74,6 +76,7 @@ public class LoginActivity extends AppCompatActivity {
         sign_up = findViewById(R.id.sign_up_here);
         mLoginFormView = findViewById(R.id.login_form);
         mProgress = findViewById(R.id.login_progress_form);
+        forgot_password = findViewById(R.id.forgot_password);
 
         facebookloginBtn.setReadPermissions("email");
 
@@ -81,6 +84,7 @@ public class LoginActivity extends AppCompatActivity {
         sign_up.setOnClickListener(onClickListener);
         facebookloginBtn.setOnClickListener(onClickListener);
         signInBtn.setOnClickListener(onClickListener);
+        forgot_password.setOnClickListener(onClickListener);
 
         animAlpha = AnimationUtils.loadAnimation(this, R.anim.alpha);
 
@@ -113,6 +117,9 @@ public class LoginActivity extends AppCompatActivity {
                     break;
                 case R.id.googleBtn:
                     startActivityForResult(mGoogleSignInClient.getSignInIntent(), 101);
+                    break;
+                case R.id.forgot_password:
+                    startActivity(new Intent(LoginActivity.this, ResetPasswordActivity.class));
                     break;
             }
         }
