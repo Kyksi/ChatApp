@@ -29,6 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.naz.chatapp.Fragments.ChatsFragment;
 import com.naz.chatapp.Fragments.ProfileFragment;
 import com.naz.chatapp.Fragments.UsersFragment;
+import com.naz.chatapp.Model.Chat;
 import com.naz.chatapp.Model.User;
 import com.naz.chatapp.Adapter.ViewPagerAdapter;
 
@@ -80,15 +81,43 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        TabLayout tabLayout = findViewById(R.id.tab_layout);
-        ViewPager viewPager = findViewById(R.id.view_pager);
+         final TabLayout tabLayout = findViewById(R.id.tab_layout);
+         final ViewPager viewPager = findViewById(R.id.view_pager);
 
-        viewPagerAdapter.addFragment(new ChatsFragment(), "Chats");
-        viewPagerAdapter.addFragment(new UsersFragment(), "Users");
-        viewPagerAdapter.addFragment(new ProfileFragment(), "Profile");
+        reference = FirebaseDatabase.getInstance().getReference("Chats");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+                int unread = 0;
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    Chat chat = snapshot.getValue(Chat.class);
+                    if (chat.getReceiver().equals(firebaseUser.getUid()) && !chat.isIsseen()){
+                        unread++;
+                    }
+                }
 
-        viewPager.setAdapter(viewPagerAdapter);
-        tabLayout.setupWithViewPager(viewPager);
+                if (unread ==0){
+                    viewPagerAdapter.addFragment(new ChatsFragment(), "Chats");
+                } else {
+                    viewPagerAdapter.addFragment(new ChatsFragment(), "("+unread+")Chats");
+                }
+
+
+                viewPagerAdapter.addFragment(new UsersFragment(), "Users");
+                viewPagerAdapter.addFragment(new ProfileFragment(), "Profile");
+
+                viewPager.setAdapter(viewPagerAdapter);
+                tabLayout.setupWithViewPager(viewPager);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
     }
 
     private void displayHeader(@NonNull DataSnapshot dataSnapshot){
